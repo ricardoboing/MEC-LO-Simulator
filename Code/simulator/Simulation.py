@@ -1,4 +1,5 @@
 class Simulation:
+	CurrentSimulation = None
 	def __init__(self, DistributorAlgorithmType):
 		self.DistributorAlgorithmType = DistributorAlgorithmType
 		self.eventScheduler = EventScheduler()
@@ -14,7 +15,7 @@ class Simulation:
 	def get_network_traffic(self):
 		return self.networkTraffic
 
-	def _increment_network_traffic(self, increment):
+	def increment_network_traffic(self, increment):
 		self.networkTraffic += increment
 	
 	def _set_clock_pointer(self, newPointer):
