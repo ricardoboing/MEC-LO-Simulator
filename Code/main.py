@@ -3,7 +3,12 @@ from scenario_object.Scenario import *
 
 def main():
 	scenario = Scenario(FILE_NAME_SCENARIO_1)
-	print(scenario.get_request_object_list())
+	_dict = scenario.get_request_object_list()
+	for serviceName in _dict:
+		_list = _dict[serviceName]
+		print(serviceName)
+		for request in _list:
+			print(request.get_id(), request.get_service().get_name())
 
 if __name__ == "__main__":
 	main()

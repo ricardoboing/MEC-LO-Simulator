@@ -1,5 +1,6 @@
 class MecNode:
-	def __init__(self, computingPower):
+	def __init__(self, name, computingPower):
+		self.name = name
 		self.isBusy = True
 		self.computingPower = computingPower
 		self.requestQueue = None
@@ -15,6 +16,9 @@ class MecNode:
 			forwardRequest = ForwardRequest(request)
 			# Forward the request when the request deadline will extrapolated
 			# Use the distributor algorithm for forward the request
+
+	def get_name(self):
+		return self.name
 
 	def get_computing_power(self):
 		return self.computingPower

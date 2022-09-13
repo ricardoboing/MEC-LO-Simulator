@@ -1,7 +1,11 @@
 class Request:
 	_RequestId = 0
-	def __init__(self, user, mec, service, generatedTime, requestId=Request._get_new_id()):
-		self.requestId = requestId
+	def __init__(self, user, mec, service, generatedTime, requestId=None):
+		if requestId == None:
+			self.requestId = Request._get_new_id()
+		else:
+			self.requestId = requestId
+		
 		self.user = user
 		self.firstMecDestination = mec
 		self.generatedTime = generatedTime
@@ -19,7 +23,7 @@ class Request:
 		self.responsedTime = Simulator.clockPointer;
 
 	def get_id(self):
-		return self.id;
+		return self.requestId;
 
 	def get_service(self):
 		return self.service;
