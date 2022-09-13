@@ -1,12 +1,17 @@
 from file.WorkbookTableFile import *
 
+_MEC_SHEET_NAME = "mec"
+_SERVICE_SHEET_NAME = "service"
+_REQUEST_SHEET_NAME = "request"
+_INTERVAL_FOR_SENDING_REQUESTS_SHEET_NAME = "intervalForSendingRequests"
+
 class InputScenarioReader:
 	def __init__(self, fileName):
 		self.workbookTable = WorkbookTableFile(fileName)
 
-	def get_mec_list(self):
-		self.workbookTable.set_current_sheet("mec")
-		mecSet = {}
+	def get_mec_dict(self):
+		self.workbookTable.set_current_sheet(_MEC_SHEET_NAME)
+		mecDict = {}
 
 		rowIndex = 1
 		while True:
@@ -16,40 +21,40 @@ class InputScenarioReader:
 			if mecName == None:
 				break
 
-			mecSet[mecName] = {
+			mecDict[mecName] = {
 				"computerPower": computerPower
 			}
 
 			rowIndex += 1
 
-		return mecSet
+		return mecDict
 
-	def get_service_list(self):
-		self.workbookTable.set_current_sheet("service")
-		serviceSet = {}
+	def get_service_dict(self):
+		self.workbookTable.set_current_sheet(_SERVICE_SHEET_NAME)
+		serviceDict = {}
 
 		rowIndex = 1
 		while True:
 			serviceName = self.workbookTable.get_row_name(rowIndex)
-			processTime = self.workbookTable.get_cell_value(rowIndex, 1)
+			maxProcessTime = self.workbookTable.get_cell_value(rowIndex, 1)
 			deadline = self.workbookTable.get_cell_value(rowIndex, 2)
 
 			if serviceName == None:
 				break
 
-			serviceSet[serviceName] = {
-				"processTime": processTime,
+			serviceDict[serviceName] = {
+				"maxProcessTime": maxProcessTime,
 				"deadline": deadline
 			}
 
 			rowIndex += 1
 
-		return serviceSet
+		return serviceDict
 
-	def get_request_list(self):
-		self.workbookTable.set_current_sheet("request")
+	def get_request_dict(self):
+		self.workbookTable.set_current_sheet(_REQUEST_SHEET_NAME)
 		
-		requestSet = {}
+		requestDict = {}
 		rowIndex = 1
 		
 		while True:
@@ -57,7 +62,7 @@ class InputScenarioReader:
 			if mecName == None:
 				break
 
-			requestSet[mecName] = {}
+			requestDict[mecName] = {}
 			columnIndex = 1
 
 			while True:
@@ -67,13 +72,14 @@ class InputScenarioReader:
 				if serviceName == None:
 					break
 
-				requestSet[mecName][serviceName] = numberOfRequests
+				requestDict[mecName][serviceName] = numberOfRequests
 
 				columnIndex += 1
 			rowIndex += 1
 
-		return requestSet
+		return requestDict
 
 
 	def get_interval_for_sending_requests(self):
-		simulationSheet = self.file["simulation"]
+		self.workbookTable.set_current_sheet(_INTERVAL_FOR_SENDING_REQUESTS_SHEET_NAME)
+		return self.workbookTable.get_cell_value(0, 1)

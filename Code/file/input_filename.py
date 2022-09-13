@@ -1,1 +1,0 @@
-FILE_NAME_SCENARIO_1 = "file/input/scenario_1.xlsx"

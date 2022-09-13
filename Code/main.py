@@ -1,24 +1,9 @@
-from file.InputScenarioReader import *
 from file.file_name.input import *
+from scenario_object.Scenario import *
 
 def main():
-	scenarioReader = InputScenarioReader(FILE_NAME_SCENARIO_1)
-
-	print("\nmec\n")
-	mecList = scenarioReader.get_mec_list()
-	for mec in mecList:
-		print(mec, mecList[mec])
-
-	print("\nservice\n")
-	serviceList = scenarioReader.get_service_list()
-	for service in serviceList:
-		print(service, serviceList[service])
-
-	print("\nrequest\n")
-	requestList = scenarioReader.get_request_list()
-	for request in requestList:
-		print(request, requestList[request])
-
+	scenario = Scenario(FILE_NAME_SCENARIO_1)
+	print(scenario.get_request_object_list())
 
 if __name__ == "__main__":
 	main()
