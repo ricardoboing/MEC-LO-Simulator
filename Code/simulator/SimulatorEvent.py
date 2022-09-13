@@ -1,14 +1,11 @@
 class SimulatorEvent:
-	def __init__(self, temporalMoment, function, request):
-		self.temporalMoment = temporalMoment
+	def __init__(self, function, requestPackage):
 		self.function = function
-		self.request = request
+		self.requestPackage = requestPackage
 
-	def get_function(self):
-		return self.function
-
-	def get_request(self):
-		return self.request
+	def happen(self):
+		self.function( self.requestPackage )
 
 	def get_temporal_moment(self):
-		return self.temporalMoment
+		request = self.requestPackage.get_request()
+		return request.get_generated_time()

@@ -33,7 +33,8 @@ def _create_random_request_object(userObject, mecObject, serviceObject, interval
 
 def _create_request_object_list(requestDict, mecObjectDict, serviceObjectDict, intervalForSendingRequests):
 	userObject = User()
-	requestListPerService = {}
+	#requestListPerService = {}
+	requestList = []
 
 	for mecName in requestDict:
 		mecDict = requestDict[mecName]
@@ -43,17 +44,18 @@ def _create_request_object_list(requestDict, mecObjectDict, serviceObjectDict, i
 			serviceObject = serviceObjectDict[serviceName]
 			numberOfRequests = mecDict[serviceName]
 
-			if serviceName not in requestListPerService:
-				requestListPerService[serviceName] = []
+			#if serviceName not in requestListPerService:
+			#	requestListPerService[serviceName] = []
 
 			for i in range(0, numberOfRequests):
 				requestObject = _create_random_request_object(
 					userObject, mecObject, serviceObject, intervalForSendingRequests
 				)
 
-				requestListPerService[serviceName].append(requestObject)
+				requestList.append(requestObject)
+				#requestListPerService[serviceName].append(requestObject)
 	
-	return requestListPerService
+	return requestList
 
 class Scenario:
 	def __init__(self, fileName):

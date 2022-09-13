@@ -1,3 +1,9 @@
+from simulator.EventScheduler import *
+from simulator.SimulatorEvent import *
+from simulator.RequestPackage import *
+
+from scenario_object.User import *
+
 class Simulation:
 	CurrentSimulation = None
 	def __init__(self, DistributorAlgorithmType):
@@ -6,8 +12,19 @@ class Simulation:
 		self.clockPointer = 0
 		self.networkTraffic = 0
 
-	def start_simulation(self, requestList):
-		pass
+	def start(self):
+		while not self.eventScheduler.is_empty():
+			event = self.eventScheduler.get_next_event()
+			temporalMoment = event.get_temporal_moment()
+			
+			self._set_clock_pointer(temporalMoment)
+			event.happen()
+
+	def generate_initial_user_event_list(self, requestList):
+		for request in requestList:
+			package = RequestPackage(request)
+			event = SimulatorEvent(User.send_request_package, package)
+			self.eventScheduler.push_event(event)
 
 	def get_clock_pointer(self):
 		return self.clockPointer
