@@ -7,7 +7,7 @@ from scenario_object.Service import *
 from scenario_object.Request import *
 from scenario_object.User import *
 
-def _create_service_object_list(serviceDict):
+def _create_service_object_dict(serviceDict):
 	serviceObjectDict = {}
 	
 	for serviceName in serviceDict:
@@ -20,12 +20,16 @@ def _create_service_object_list(serviceDict):
 
 def _create_mec_object_list(mecDict):
 	mecObjectDict = {}
+	mecList = []
 	
 	for mecName in mecDict:
 		computerPower = mecDict[mecName]["computerPower"]
-		mecObjectDict[mecName] = MecNode(mecName, computerPower)
+		mecNode = MecNode(mecName, computerPower)
+		
+		mecObjectDict[mecName] = mecNode
+		mecList.append(mecNode)
 
-	return mecObjectDict
+	return mecList, mecObjectDict
 
 def _create_random_request_object(userObject, mecObject, serviceObject, intervalForSendingRequests):
 	generatedTime = random.randint(0, intervalForSendingRequests)
@@ -65,8 +69,8 @@ class Scenario:
 		serviceDict = scenarioReader.get_service_dict()
 		self._requestDict = scenarioReader.get_request_dict()
 
-		self._mecObjectDict = _create_mec_object_list(mecDict)
-		self._serviceObjectDict = _create_service_object_list(serviceDict)
+		self._mecList, self._mecObjectDict = _create_mec_object_list(mecDict)
+		self._serviceObjectDict = _create_service_object_dict(serviceDict)
 		self._intervalForSendingRequests = scenarioReader.get_interval_for_sending_requests()
 
 		self.generate_new_request_object_list()
@@ -78,3 +82,6 @@ class Scenario:
 
 	def get_request_object_list(self):
 		return self.requestObjectList
+
+	def get_mec_list(self):
+		return self._mecList

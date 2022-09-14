@@ -1,10 +1,9 @@
 class MecNode:
 	def __init__(self, name, computingPower):
 		self.name = name
-		self.isBusy = True
 		self.computingPower = computingPower
-		self.requestQueue = None
-		self.currentRequestInProcess = None
+		
+		self.reset()
 
 	def set_a_new_request_queue(self, QueueType):
 		self.requestQueue = QueueType()
@@ -13,7 +12,7 @@ class MecNode:
 		success = self.requestQueue.push_request(request)
 
 		if not success:
-			forwardRequest = ForwardRequest(request)
+			forwardRequest = RequestPackage(request)
 			# Forward the request when the request deadline will extrapolated
 			# Use the distributor algorithm for forward the request
 
@@ -39,4 +38,6 @@ class MecNode:
 		pass
 
 	def reset(self):
-		pass
+		self.isBusy = False
+		self.requestQueue = None
+		self.currentRequestInProcess = None
