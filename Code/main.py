@@ -34,7 +34,7 @@ def main():
 
 	for simulationLog in simulationLogList:
 		periodLogList = simulationLog.get_period_log_list()
-		c = 0
+
 		distributorSheetName = simulationLog.get_distributor_class().__name__
 		writer.create_distributor_sheet(distributorSheetName)
 
@@ -57,7 +57,7 @@ def main():
 				periodLog.get_time(),
 				periodLog.get_network_counter()
 			)
-			c += periodLog.get_network_counter()
+
 			print(
 				periodLog.get_time(),
 				periodLog.get_network_counter(),
@@ -65,8 +65,6 @@ def main():
 				periodLog.get_fail_counter()
 			)
 			writer.increment_row_index()
-
-		print(c)
 
 	writer.save()
 

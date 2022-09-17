@@ -29,7 +29,7 @@ class _PeriodLog:
 		return self.networkTraffic
 
 	def get_clone(self, time):
-		clone = PeriodLog(time)
+		clone = _PeriodLog(time)
 		clone.successCounter = self.successCounter
 		clone.failCounter = self.failCounter
 		clone.networkTraffic = self.networkTraffic
@@ -42,7 +42,7 @@ class SimulationLog:
 		self.intervalBetweenLog = intervalBetweenLog
 		self.periodLogList = []
 
-		self._create_new_period_log(0)
+		self.currentPeriodLog = _PeriodLog(0)
 
 	def increment_success_counter(self):
 		self._check_period_log()
@@ -72,18 +72,18 @@ class SimulationLog:
 		if realTime >= nextIndex:
 			i = math.floor(realTime / self.intervalBetweenLog)
 			newPeriodLogTime = i * self.intervalBetweenLog
-			#print(newPeriodLogTime)
+
 			self._create_new_period_log(newPeriodLogTime)
 
 	def _create_new_period_log(self, time):
-		newPeriodLog = _PeriodLog(time)
+		newPeriodLog = self.currentPeriodLog.get_clone(time)
 
 		self.currentPeriodLog = newPeriodLog
 		self.periodLogList.append(newPeriodLog)
 
 class Logger:
 	_simulationLogList = []
-	_intervalBetweenLog = 25 #################### <<<<<< 
+	_intervalBetweenLog = 5 #################### <<<<<< 
 	_currentSimulationLog = None
 
 	@staticmethod
