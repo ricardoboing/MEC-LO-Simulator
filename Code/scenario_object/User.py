@@ -11,13 +11,13 @@ def generate_event_receive_user_request(requestPackage):
 class User:
 	@staticmethod
 	def receive_response_request(requestPackage):
-		print("User.receive_response_request", requestPackage.get_request().get_id())
+		#print("User.receive_response_request", requestPackage.get_request().get_id())
 		# Log responsed request
+		pass
 
 	@staticmethod
 	def send_request_package(requestPackage):
-		print("User.send_request_package", requestPackage.get_request().get_id())
-
+		#print("User.send_request_package", requestPackage.get_request().get_id())
 		Simulation.increment_network_traffic()
 
 		event = generate_event_receive_user_request(requestPackage)

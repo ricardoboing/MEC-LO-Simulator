@@ -1,6 +1,7 @@
 from simulator.EventScheduler import *
 from simulator.SimulatorEvent import *
 from simulator.RequestPackage import *
+from simulator.Logger import *
 
 def reset_mec_list(mecList):
 	for mec in mecList:
@@ -10,8 +11,8 @@ class Simulation:
 	_currentSimulation = None
 	_mecList = None
 
-	def __init__(self, DistributorAlgorithmType):
-		self.DistributorAlgorithmType = DistributorAlgorithmType
+	def __init__(self, DistributorClass):
+		self.DistributorClass = DistributorClass
 		self.eventScheduler = EventScheduler()
 		self.clockPointer = 0
 		self.networkTraffic = 0
@@ -21,7 +22,9 @@ class Simulation:
 	@staticmethod
 	def start():
 		currentSimulation = Simulation._currentSimulation
+		DistributorClass = currentSimulation.DistributorClass
 		reset_mec_list(Simulation._mecList)
+		Logger.create_new_simulation_log(DistributorClass)
 
 		while not currentSimulation.eventScheduler.is_empty():
 			event = currentSimulation.eventScheduler.get_next_event()
@@ -48,7 +51,7 @@ class Simulation:
 	@staticmethod
 	def increment_network_traffic(increment=1):
 		Simulation._currentSimulation.networkTraffic += increment
-		# Log network traffic
+		Logger.increment_network_counter()
 
 	@staticmethod
 	def set_mec_list(mecList):
@@ -63,7 +66,7 @@ class Simulation:
 
 	@staticmethod
 	def get_distributor_type():
-		return Simulation._currentSimulation.DistributorAlgorithmType
+		return Simulation._currentSimulation.DistributorClass
 
 	@staticmethod
 	def get_clock_pointer():

@@ -3,6 +3,7 @@ from scenario_object.Scenario import *
 
 from simulator.Simulation import *
 from distributor.distributor_type_list import *
+from file.output_scenario_writer.OutputScenarioWriter import *
 
 def get_copy_request_list(requestList):
 	copyRequestList = []
@@ -26,6 +27,48 @@ def main():
 		Simulation(distributor)
 		Simulation.generate_initial_user_event_list(copyRequestList)
 		Simulation.start()
+
+	simulationLogList = Logger.get_simulation_log_list()
+
+	writer = OutputScenarioWriter("output.xlsx")
+
+	for simulationLog in simulationLogList:
+		periodLogList = simulationLog.get_period_log_list()
+		c = 0
+		distributorSheetName = simulationLog.get_distributor_class().__name__
+		writer.create_distributor_sheet(distributorSheetName)
+
+		for periodLog in periodLogList:
+			writer.set_row_in_distributor_sheet(
+				periodLog.get_time(),
+				periodLog.get_success_counter(),
+				periodLog.get_fail_counter(),
+				periodLog.get_network_counter()
+			)
+			writer.set_row_in_success_sheet(
+				periodLog.get_time(),
+				periodLog.get_success_counter()
+			)
+			writer.set_row_in_fail_sheet(
+				periodLog.get_time(),
+				periodLog.get_fail_counter()
+			)
+			writer.set_row_in_network_sheet(
+				periodLog.get_time(),
+				periodLog.get_network_counter()
+			)
+			c += periodLog.get_network_counter()
+			print(
+				periodLog.get_time(),
+				periodLog.get_network_counter(),
+				periodLog.get_success_counter(),
+				periodLog.get_fail_counter()
+			)
+			writer.increment_row_index()
+
+		print(c)
+
+	writer.save()
 
 if __name__ == "__main__":
 	main()
