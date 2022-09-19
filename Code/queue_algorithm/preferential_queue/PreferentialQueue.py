@@ -1,0 +1,66 @@
+from simulator.Simulation import *
+from queue_algorithm.preferential_queue.FreeBlock import *
+import math
+
+class PreferentialQueue:
+	def __init__(self):
+		initialBlock = FreeBlock(0, math.inf)
+
+		self.firstBlock = initialBlock
+		self.lastBlock = initialBlock
+
+	def push_request(self, request):
+		self._update_first_freeblock()
+		block = self.lastBlock
+
+		while block != None:
+			if block.__class__ == FreeBlock:
+				leftBlock, requestBlock, rightBlock = block.alloc(request)
+
+				if (leftBlock != None) or (requestBlock != None) or (rightBlock != None):
+					self._update_first_block(block, leftBlock, requestBlock)
+					self._update_last_block(block, rightBlock, requestBlock)
+					return True
+
+			block = block.get_left_block()
+		return False
+
+	def get_first_request(self):
+		pass
+
+	def is_empty(self):
+		return self.firstBlock == self.lastBlock
+
+	def _update_first_block(self, removedBlock, newLeftBlock, newRequestBlock):
+		if self.firstBlock != removedBlock:
+			return
+
+		if newLeftBlock != None:
+			self.firstBlock = newLeftBlock
+			return
+
+		self.firstBlock = newRequestBlock
+
+	def _update_last_block(self, removedBlock, newRightBlock, newRequestBlock):
+		if self.lastBlock != removedBlock:
+			return
+
+		if newRightBlock != None:
+			self.lastBlock = newRightBlock
+			return
+
+		self.lastBlock = newRequestBlock
+
+	def _update_first_freeblock(self):
+		if self.firstBlock.__class__ != FreeBlock:
+			return
+
+		realTime = Simulation.get_clock_pointer()
+		if self.firstBlock.get_start() == realTime:
+			return
+
+		self.firstBlock.set_start(realTime)
+		
+		if self.firstBlock.get_size() <= 0:
+			self.rightBlock.leftBlock = None
+			self.firstBlock = self.rightBlock

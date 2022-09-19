@@ -14,8 +14,7 @@ def get_copy_request_list(requestList):
 
 	return copyRequestList
 
-def main():
-	scenario = Scenario(FILE_NAME_SCENARIO_1)
+def simulate_scenario(scenario):
 	requestList = scenario.get_request_object_list()
 	mecList = scenario.get_mec_list()
 
@@ -28,9 +27,10 @@ def main():
 		Simulation.generate_initial_user_event_list(copyRequestList)
 		Simulation.start()
 
-	simulationLogList = Logger.get_simulation_log_list()
+def writer_output_file(outputFileName):
+	writer = OutputScenarioWriter(outputFileName)
 
-	writer = OutputScenarioWriter("output.xlsx")
+	simulationLogList = Logger.get_simulation_log_list()
 
 	for simulationLog in simulationLogList:
 		periodLogList = simulationLog.get_period_log_list()
@@ -67,6 +67,13 @@ def main():
 			writer.increment_row_index()
 
 	writer.save()
+
+def main():
+	scenario = Scenario(FILE_NAME_SCENARIO_1)
+	simulate_scenario(scenario)
+	writer_output_file("output.xlsx")
+
+	pass
 
 if __name__ == "__main__":
 	main()
