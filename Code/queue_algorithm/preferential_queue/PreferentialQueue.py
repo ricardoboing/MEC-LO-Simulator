@@ -26,7 +26,34 @@ class PreferentialQueue:
 		return False
 
 	def get_first_request(self):
-		pass
+		if self.is_empty():
+			return None
+
+		if self.firstBlock.__class__ != RequestBlock:
+			self.firstBlock = self.firstBlock.get_right_block()
+
+		requestBlock = self.firstBlock
+		secondBlock = self.firstBlock.get_right_block()
+
+		realTime = Simulation.get_clock_pointer()
+		start = realTime + self.firstBlock.get_size()
+
+		if secondBlock.__class__ == RequestBlock:
+			end = secondBlock.get_start()
+
+			firstBlock = FreeBlock(start, end)
+			firstBlock.set_left_block(None)
+			firstBlock.set_right_block(secondBlock)
+			secondBlock.set_left_block(firstBlock)
+
+			self.firstBlock = firstBlock
+		else:
+			secondBlock.set_start(start)
+			secondBlock.set_left_block(None)
+
+			self.firstBlock = secondBlock
+
+		return requestBlock.get_request()
 
 	def is_empty(self):
 		return self.firstBlock == self.lastBlock
