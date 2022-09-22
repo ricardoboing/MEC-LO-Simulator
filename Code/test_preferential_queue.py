@@ -58,6 +58,9 @@ def default_assert(lastBlock):
 	assert _queue.firstBlock.leftBlock == None
 	assert _queue.lastBlock.rightBlock == None
 
+def test_0():
+	assert _queue.is_empty() == True
+
 def test_1():
 	print("Test 1 (alloc) - First request")
 	assert push_request(5, 10, 15) == True
@@ -435,6 +438,7 @@ def test_22():
 if __name__ == "__main__":
 	Simulation(TestDistributor)
 
+	test_0()
 	test_1()
 	test_2()
 	test_3()
@@ -461,5 +465,6 @@ if __name__ == "__main__":
 
 	test_21()
 	test_22()
+	test_0()
 
 	print("All tests are ok")

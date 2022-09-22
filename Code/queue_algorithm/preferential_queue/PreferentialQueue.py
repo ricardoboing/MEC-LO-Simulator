@@ -1,8 +1,9 @@
 from simulator.Simulation import *
 from queue_algorithm.preferential_queue.FreeBlock import *
+from queue_algorithm.RequestQueue import *
 import math
 
-class PreferentialQueue:
+class PreferentialQueue(RequestQueue):
 	def __init__(self):
 		initialBlock = FreeBlock(0, math.inf)
 
