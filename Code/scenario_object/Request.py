@@ -14,28 +14,31 @@ class Request:
 
 	@staticmethod
 	def _get_new_id():
-		requestId = Request._RequestId;
+		requestId = Request._RequestId
 		Request._RequestId += 1
 
-		return requestId;
+		return requestId
 
 	def set_responsed(self):
-		self.responsedTime = Simulator.clockPointer;
+		self.responsedTime = Simulator.clockPointer
 
 	def get_id(self):
-		return self.requestId;
+		return self.requestId
 
 	def get_generated_time(self):
 		return self.generatedTime
 
 	def get_service(self):
-		return self.service;
+		return self.service
 
 	def get_first_mec_destination(self):
-		return self.firstMecDestination;
+		return self.firstMecDestination
 
 	def get_responsed_time(self):
-		return self.responsedTime;
+		return self.responsedTime
+
+	def get_service(self):
+		return self.service
 
 	def get_a_clone(self):
 		return Request(self.user, self.firstMecDestination, self.service, self.generatedTime, self.requestId)

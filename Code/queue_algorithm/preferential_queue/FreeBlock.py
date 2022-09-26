@@ -61,12 +61,17 @@ class FreeBlock(Block):
 	def set_start(self, start):
 		self.start = start
 
-	def alloc(self, request):
+	def alloc(self, request, force):
 		usefulArea = _get_useful_area(self, request)
 		requestSize = _get_request_size(request)
 
 		if usefulArea["size"] < requestSize:
-			return None, None, None
+			if not force:
+				return None, None, None
+
+			usefulArea["start"] = self.get_start()
+			usefulArea["end"] = usefulArea["start"] + requestSize
+			usefulArea["size"] = requestSize
 
 		requestBlock = _create_request_block(usefulArea, requestSize, request)
 		leftBlock, rightBlock = self.split_block(requestBlock.get_start(), requestBlock.get_end())

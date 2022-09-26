@@ -57,13 +57,14 @@ def writer_output_file(outputFileName):
 				periodLog.get_time(),
 				periodLog.get_network_counter()
 			)
-
+			'''
 			print(
 				periodLog.get_time(),
 				periodLog.get_network_counter(),
 				periodLog.get_success_counter(),
 				periodLog.get_fail_counter()
 			)
+			'''
 			writer.increment_row_index()
 
 	writer.save()

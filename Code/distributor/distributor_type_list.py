@@ -1,6 +1,6 @@
-from distributor.TestDistributor import TestDistributor
+from distributor.OriginalSequentialForwarding import OriginalSequentialForwarding
 
 DistributorAlgorithm = [
-	TestDistributor,
-	TestDistributor
+	OriginalSequentialForwarding,
+	OriginalSequentialForwarding
 ]

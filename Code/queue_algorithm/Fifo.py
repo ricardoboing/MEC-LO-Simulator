@@ -5,7 +5,11 @@ class Fifo(RequestQueue):
 	def __init__(self):
 		self.queue = []
 
-	def push_request(self, request):
+	def push_request(self, request, force):
+		if force:
+			self.queue.append(request)
+			return True
+		
 		service = request.get_service()
 		processTime = service.get_max_process_time()
 

@@ -3,9 +3,10 @@ from simulator.SimulatorEvent import *
 from simulator.RequestPackage import *
 from simulator.Logger import *
 
-def reset_mec_list(mecList):
+def reset_mec_list(mecList, QueueClass):
 	for mec in mecList:
 		mec.reset()
+		mec.set_a_new_request_queue(QueueClass)
 
 class Simulation:
 	_currentSimulation = None
@@ -23,7 +24,8 @@ class Simulation:
 	def start():
 		currentSimulation = Simulation._currentSimulation
 		DistributorClass = currentSimulation.DistributorClass
-		reset_mec_list(Simulation._mecList)
+		QueueClass = DistributorClass.QueueClass
+		reset_mec_list(Simulation._mecList, QueueClass)
 		Logger.create_new_simulation_log(DistributorClass)
 
 		while not currentSimulation.eventScheduler.is_empty():
@@ -42,7 +44,8 @@ class Simulation:
 		currentSimulation = Simulation._currentSimulation
 
 		for request in requestList:
-			package = RequestPackage(request)
+			destination = request.get_first_mec_destination()
+			package = RequestPackage(request, destination)
 			delay = request.get_generated_time()
 
 			event = SimulatorEvent.generate_new_event(User.send_request_package, package, delay)
@@ -63,6 +66,9 @@ class Simulation:
 			raise Exception("newPointer < self.clockPointer in Simulation class.")
 
 		Simulation._currentSimulation.clockPointer = newPointer
+
+	def get_mec_list():
+		return Simulation._mecList
 
 	@staticmethod
 	def get_distributor_type():

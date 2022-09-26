@@ -1,5 +1,5 @@
 from simulator.Simulation import *
-from distributor.TestDistributor import *
+from distributor.OriginalSequentialForwarding import *
 
 from scenario_object.Request import *
 from scenario_object.Service import *
@@ -11,11 +11,11 @@ requestList = []
 def get_request():
 	return _queue.get_first_request()
 
-def push_request(generatedTime, serviceMaxProcessTime, serviceDeadline):
+def push_request(generatedTime, serviceMaxProcessTime, serviceDeadline, force=False):
 	service = Service("", serviceDeadline, serviceMaxProcessTime)
 	request = Request(None, None, service, generatedTime)
 
-	succes = _queue.push_request(request)
+	succes = _queue.push_request(request, force)
 	if succes:
 		requestList.append(request)
 
@@ -33,7 +33,7 @@ def assert_block(block, noneLeft, noneRight):
 		assert block.rightBlock.leftBlock == block
 
 def assert_free_block(block, start, end, noneLeft, noneRight):
-	print("B", block.start, block.end)
+	#print("B", block.start, block.end)
 	assert block.__class__ == FreeBlock
 	assert block.start == start
 	assert block.end == end
@@ -43,7 +43,7 @@ def assert_free_block(block, start, end, noneLeft, noneRight):
 	return block.rightBlock
 
 def assert_request_block(block, start, end, request, noneLeft, noneRight):
-	print("R", block.start, block.end)
+	#print("R", block.start, block.end)
 	assert block.__class__ == RequestBlock
 	assert block.start == start
 	assert block.end == end
@@ -435,8 +435,64 @@ def test_22():
 
 	default_assert(block)
 
+	Simulation._set_clock_pointer(89)
+
+def test_23():
+	print("Test 23 deadline overflow and not force")
+	assert push_request(75, 5, 10) == False
+
+def test_24():
+	print("Test 24 deadline overflow and force")
+	assert push_request(75, 5, 10, True) == True
+
+	block = _queue.firstBlock
+	# R11
+	block = assert_request_block(block, 89, 94, requestList[10], True, False)
+	assert_free_block(block, 94, math.inf, False, True)
+
+	default_assert(block)
+
+def test_25():
+	print("Test 25 deadline overflow and force")
+	assert push_request(75, 5, 10, True) == True
+
+	block = _queue.firstBlock
+	# R11
+	block = assert_request_block(block, 89, 94, requestList[10], True, False)
+	# R12
+	block = assert_request_block(block, 94, 99, requestList[11], False, False)
+	assert_free_block(block, 99, math.inf, False, True)
+
+	default_assert(block)
+
+def test_26():
+	print("Test 26")
+	request = get_request()
+	assert request == requestList[10]
+
+	block = _queue.firstBlock
+	# R12
+	block = assert_request_block(block, 94, 99, requestList[11], True, False)
+	assert_free_block(block, 99, math.inf, False, True)
+
+	default_assert(block)
+
+	Simulation._set_clock_pointer(94)
+
+def test_27():
+	print("Test 27")
+	request = get_request()
+	assert request == requestList[11]
+
+	block = _queue.firstBlock
+	assert_free_block(block, 99, math.inf, True, True)
+
+	default_assert(block)
+
+	Simulation._set_clock_pointer(99)
+
 if __name__ == "__main__":
-	Simulation(TestDistributor)
+	Simulation(OriginalSequentialForwarding)
 
 	test_0()
 	test_1()
@@ -466,5 +522,11 @@ if __name__ == "__main__":
 	test_21()
 	test_22()
 	test_0()
+
+	test_23()
+	test_24()
+	test_25()
+	test_26()
+	test_27()
 
 	print("All tests are ok")

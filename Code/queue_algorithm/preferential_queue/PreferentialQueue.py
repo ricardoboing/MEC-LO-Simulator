@@ -10,13 +10,13 @@ class PreferentialQueue(RequestQueue):
 		self.firstBlock = initialBlock
 		self.lastBlock = initialBlock
 
-	def push_request(self, request):
+	def push_request(self, request, force=False):
 		self._update_first_freeblock()
 		block = self.lastBlock
 
 		while block != None:
 			if block.__class__ == FreeBlock:
-				leftBlock, requestBlock, rightBlock = block.alloc(request)
+				leftBlock, requestBlock, rightBlock = block.alloc(request, False)
 
 				if (leftBlock != None) or (requestBlock != None) or (rightBlock != None):
 					self._update_first_block(block, leftBlock, requestBlock)
@@ -24,6 +24,14 @@ class PreferentialQueue(RequestQueue):
 					return True
 
 			block = block.get_left_block()
+
+		if force:
+			block = self.lastBlock
+			leftBlock, requestBlock, rightBlock = block.alloc(request, force)
+			self._update_first_block(block, leftBlock, requestBlock)
+			self._update_last_block(block, rightBlock, requestBlock)
+
+			return True
 		return False
 
 	def get_first_request(self):
@@ -42,12 +50,16 @@ class PreferentialQueue(RequestQueue):
 		if secondBlock.__class__ == RequestBlock:
 			end = secondBlock.get_start()
 
-			firstBlock = FreeBlock(start, end)
-			firstBlock.set_left_block(None)
-			firstBlock.set_right_block(secondBlock)
-			secondBlock.set_left_block(firstBlock)
+			if end - start > 0:
+				firstBlock = FreeBlock(start, end)
+				firstBlock.set_left_block(None)
+				firstBlock.set_right_block(secondBlock)
+				secondBlock.set_left_block(firstBlock)
 
-			self.firstBlock = firstBlock
+				self.firstBlock = firstBlock
+			else:
+				self.firstBlock = secondBlock
+				secondBlock.set_left_block(None)
 		else:
 			secondBlock.set_start(start)
 			secondBlock.set_left_block(None)
