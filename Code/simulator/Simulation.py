@@ -52,9 +52,19 @@ class Simulation:
 			currentSimulation.eventScheduler.push_event(event)
 
 	@staticmethod
-	def increment_network_traffic(increment=1):
-		Simulation._currentSimulation.networkTraffic += increment
+	def increment_network_traffic():
 		Logger.increment_network_counter()
+
+	@staticmethod
+	def increment_success_counter():
+		Logger.increment_success_counter()
+
+	@staticmethod
+	def increment_fail_counter():
+		Logger.increment_fail_counter()
+
+	def increment_forward_counter():
+		Logger.increment_forward_counter()
 
 	@staticmethod
 	def set_mec_list(mecList):
@@ -79,17 +89,13 @@ class Simulation:
 		return Simulation._currentSimulation.clockPointer
 
 	@staticmethod
-	def get_network_traffic():
-		return Simulation._currentSimulation.networkTraffic
-
-	@staticmethod
 	def get_network_user_mec_delay():
-		return 5
+		return 0
 
 	@staticmethod
 	def get_network_mec_mec_delay():
-		return 5
+		return 0
 
 	@staticmethod
 	def get_network_mec_user_delay():
-		return 5
+		return 0

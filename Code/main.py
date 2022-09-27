@@ -43,7 +43,8 @@ def writer_output_file(outputFileName):
 				periodLog.get_time(),
 				periodLog.get_success_counter(),
 				periodLog.get_fail_counter(),
-				periodLog.get_network_counter()
+				periodLog.get_network_counter(),
+				periodLog.get_forward_counter()
 			)
 			writer.set_row_in_success_sheet(
 				periodLog.get_time(),
@@ -55,7 +56,11 @@ def writer_output_file(outputFileName):
 			)
 			writer.set_row_in_network_sheet(
 				periodLog.get_time(),
-				periodLog.get_network_counter()
+				periodLog.get_network_counter(),
+			)
+			writer.set_row_in_forward_sheet(
+				periodLog.get_time(),
+				periodLog.get_forward_counter()
 			)
 			'''
 			print(
@@ -70,11 +75,11 @@ def writer_output_file(outputFileName):
 	writer.save()
 
 def main():
-	scenario = Scenario(FILE_NAME_SCENARIO_1)
+	scenario = Scenario(FILE_NAME_SCENARIO_TEST)
 	simulate_scenario(scenario)
 	writer_output_file("output.xlsx")
 
-	pass
+	print(scenario._intervalForSendingRequests)
 
 if __name__ == "__main__":
 	main()

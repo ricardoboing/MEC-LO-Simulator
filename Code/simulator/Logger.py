@@ -6,6 +6,7 @@ class _PeriodLog:
 		self.successCounter = 0
 		self.failCounter = 0
 		self.networkTraffic = 0
+		self.forwardCounter = 0
 
 	def increment_success_counter(self):
 		self.successCounter += 1
@@ -15,6 +16,9 @@ class _PeriodLog:
 
 	def increment_network_counter(self):
 		self.networkTraffic += 1
+
+	def increment_forward_counter(self):
+		self.forwardCounter += 1
 
 	def get_time(self):
 		return self.time
@@ -28,11 +32,15 @@ class _PeriodLog:
 	def get_network_counter(self):
 		return self.networkTraffic
 
+	def get_forward_counter(self):
+		return self.forwardCounter
+
 	def get_clone(self, time):
 		clone = _PeriodLog(time)
 		clone.successCounter = self.successCounter
 		clone.failCounter = self.failCounter
 		clone.networkTraffic = self.networkTraffic
+		clone.forwardCounter = self.forwardCounter
 
 		return clone
 
@@ -55,6 +63,10 @@ class SimulationLog:
 	def increment_network_counter(self):
 		self._check_period_log()
 		self.currentPeriodLog.increment_network_counter()
+
+	def increment_forward_counter(self):
+		self._check_period_log()
+		self.currentPeriodLog.increment_forward_counter()
 
 	def get_distributor_class(self):
 		return self.DistributorClass
@@ -108,6 +120,10 @@ class Logger:
 	@staticmethod
 	def increment_network_counter():
 		Logger._currentSimulationLog.increment_network_counter()
+
+	@staticmethod
+	def increment_forward_counter():
+		Logger._currentSimulationLog.increment_forward_counter()
 
 	@staticmethod
 	def get_simulation_log_list():

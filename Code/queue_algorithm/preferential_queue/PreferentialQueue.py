@@ -102,5 +102,5 @@ class PreferentialQueue(RequestQueue):
 		self.firstBlock.set_start(realTime)
 		
 		if self.firstBlock.get_size() <= 0:
-			self.rightBlock.leftBlock = None
-			self.firstBlock = self.rightBlock
+			self.firstBlock.rightBlock.leftBlock = None
+			self.firstBlock = self.firstBlock.rightBlock

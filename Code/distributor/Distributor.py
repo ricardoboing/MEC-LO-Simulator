@@ -24,7 +24,7 @@ def generate_event_finish_request_processing(request, mec):
 
 	service = request.get_service()
 	delay = service.get_max_process_time()
-	eventFunction = DistributorType.finish_current_request_processing
+	eventFunction = Distributor.finish_current_request_processing
 
 	return SimulatorEvent.generate_new_event(eventFunction, mec, delay)
 
@@ -36,7 +36,6 @@ def get_random_destination(visitedMecList):
 		if mec not in visitedMecList:
 			notVisitedList.append(mec)
 
-	print(len(notVisitedList)-1)
 	randomIndex = random.randint(0, len(notVisitedList)-1)
 
 	return notVisitedList[randomIndex]
@@ -45,6 +44,7 @@ class Distributor:
 	@staticmethod
 	def send_forward_request(packageRequest):
 		Simulation.increment_network_traffic()
+		Simulation.increment_forward_counter()
 
 		packageRequest.increment_forward_counter()
 		visitedMecList = packageRequest.get_previous_destination_list()

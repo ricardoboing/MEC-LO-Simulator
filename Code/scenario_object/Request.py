@@ -1,3 +1,5 @@
+from simulator.Simulation import *
+
 class Request:
 	_RequestId = 0
 	def __init__(self, user, mec, service, generatedTime, requestId=None):
@@ -20,7 +22,7 @@ class Request:
 		return requestId
 
 	def set_responsed(self):
-		self.responsedTime = Simulator.clockPointer
+		self.responsedTime = Simulation.get_clock_pointer()
 
 	def get_id(self):
 		return self.requestId
@@ -39,6 +41,11 @@ class Request:
 
 	def get_service(self):
 		return self.service
+
+	def met_the_deadline(self):
+		serviceDeadline = self.service.get_deadline()
+#		print(self.generatedTime, serviceDeadline, self.responsedTime, self.generatedTime + serviceDeadline >= self.responsedTime)
+		return self.generatedTime + serviceDeadline >= self.responsedTime
 
 	def get_a_clone(self):
 		return Request(self.user, self.firstMecDestination, self.service, self.generatedTime, self.requestId)

@@ -25,9 +25,6 @@ class OriginalSequentialForwarding:
 			if not mecIsBusy:
 				return Distributor.start_next_request_processing(mec)
 		else:
-			if forceLocalProcessing:
-				print("forceLocalProcessing")
-				return None
 			return Distributor.send_forward_request(packageRequest)
 			
 		return None

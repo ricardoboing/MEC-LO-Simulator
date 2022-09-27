@@ -12,8 +12,15 @@ class User:
 	@staticmethod
 	def receive_response_request(requestPackage):
 		#print("User.receive_response_request", requestPackage.get_request().get_id())
-		# Log responsed request
-		pass
+
+		request = requestPackage.get_request()
+		request.set_responsed()
+
+		if request.met_the_deadline():
+			#print("??")
+			Simulation.increment_success_counter()
+		else:
+			Simulation.increment_fail_counter()
 
 	@staticmethod
 	def send_request_package(requestPackage):

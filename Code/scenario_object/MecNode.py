@@ -7,11 +7,10 @@ class MecNode:
 
 	def set_a_new_request_queue(self, QueueClass):
 		self.requestQueue = QueueClass()
+		print(QueueClass.__name__)
 
-	def receive_request(self, request, force=False): # force when forwarded > limit (some algorithms)
-		return self.requestQueue.push_request(request)
-
-# forwardRequest = RequestPackage(request)
+	def receive_request(self, request, force=False):
+		return self.requestQueue.push_request(request, force)
 
 	def get_name(self):
 		return self.name
@@ -26,10 +25,12 @@ class MecNode:
 		return self.currentRequestInProcess
 
 	def finish_current_request_in_process(self):
+		assert self.is_busy() == True
+
 		self.isBusy = False
 		return self.currentRequestInProcess
 
-	def set_next_current_request_in_process(self):
+	def start_next_request_processing(self):
 		assert self.is_busy() == False
 		
 		if self.has_next_request():
