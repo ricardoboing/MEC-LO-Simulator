@@ -1,10 +1,9 @@
 from distributor.Distributor import *
 from queue_algorithm.Fifo import *
 
-FORWARD_LIMIT = 3
-
 class OriginalSequentialForwarding:
 	QueueClass = Fifo
+	FORWARD_LIMIT = 3
 
 	def receive_forward_request(packageRequest):
 		return OriginalSequentialForwarding.receive_user_request(packageRequest)
@@ -15,7 +14,7 @@ class OriginalSequentialForwarding:
 		mec = packageRequest.get_destination()
 
 		forwardCount = packageRequest.get_forward_counter()
-		forceLocalProcessing = forwardCount >= FORWARD_LIMIT
+		forceLocalProcessing = forwardCount >= OriginalSequentialForwarding.FORWARD_LIMIT
 
 		succes = mec.receive_request(request, forceLocalProcessing)
 

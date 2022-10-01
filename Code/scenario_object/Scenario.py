@@ -71,7 +71,7 @@ class Scenario:
 
 		self._mecList, self._mecObjectDict = _create_mec_object_list(mecDict)
 		self._serviceObjectDict = _create_service_object_dict(serviceDict)
-		self._intervalForSendingRequests = 70000#scenarioReader.get_interval_for_sending_requests()
+		self._intervalForSendingRequests = scenarioReader.get_interval_for_sending_requests()
 
 		self.generate_new_request_object_list()
 

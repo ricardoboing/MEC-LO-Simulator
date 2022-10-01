@@ -8,6 +8,12 @@ from queue_algorithm.preferential_queue.PreferentialQueue import *
 _queue = PreferentialQueue()
 requestList = []
 
+def reset():
+	global requestList
+	_queue = PreferentialQueue()
+	requestList = []
+	Simulation._currentSimulation.clockPointer = 0
+
 def get_request():
 	return _queue.get_first_request()
 
@@ -33,7 +39,7 @@ def assert_block(block, noneLeft, noneRight):
 		assert block.rightBlock.leftBlock == block
 
 def assert_free_block(block, start, end, noneLeft, noneRight):
-	#print("B", block.start, block.end)
+	print("B", block.start, block.end, block.__class__.__name__)
 	assert block.__class__ == FreeBlock
 	assert block.start == start
 	assert block.end == end
@@ -43,7 +49,7 @@ def assert_free_block(block, start, end, noneLeft, noneRight):
 	return block.rightBlock
 
 def assert_request_block(block, start, end, request, noneLeft, noneRight):
-	#print("R", block.start, block.end)
+	print("R", block.start, block.end, block.__class__.__name__)
 	assert block.__class__ == RequestBlock
 	assert block.start == start
 	assert block.end == end
@@ -491,6 +497,29 @@ def test_27():
 
 	Simulation._set_clock_pointer(99)
 
+def test_28():
+	print("Test 28")
+	assert push_request(10, 80, 140) == True
+	
+	block = _queue.firstBlock
+	block = assert_free_block(block, 6, 10, True, False)
+	# R1
+	block = assert_request_block(block, 10, 20, requestList[0], False, False)
+	block = assert_free_block(block, 20, 28, False, False)
+	# R5
+	block = assert_request_block(block, 28, 43, requestList[4], False, False)
+	# R3
+	block = assert_request_block(block, 43, 53, requestList[2], False, False)
+	# R2
+	block = assert_request_block(block, 53, 55, requestList[1], False, False)
+	# R6
+	block = assert_request_block(block, 55, 135, requestList[5], False, False)
+	# R4
+	block = assert_request_block(block, 135, 150, requestList[3], False, False)
+	assert_free_block(block, 150, math.inf, False, True)
+
+	default_assert(block)
+
 if __name__ == "__main__":
 	Simulation(OriginalSequentialForwarding)
 
@@ -528,5 +557,15 @@ if __name__ == "__main__":
 	test_25()
 	test_26()
 	test_27()
+
+	reset()
+
+	test_0()
+	test_1()
+	test_2()
+	test_3()
+	test_4()
+	test_5()
+	test_28()
 
 	print("All tests are ok")

@@ -1,9 +1,12 @@
 from file.file_name.input import *
+from file.file_name.output import *
 from scenario_object.Scenario import *
 
 from simulator.Simulation import *
 from distributor.distributor_type_list import *
 from file.output_scenario_writer.OutputScenarioWriter import *
+
+import datetime
 
 def get_copy_request_list(requestList):
 	copyRequestList = []
@@ -62,24 +65,29 @@ def writer_output_file(outputFileName):
 				periodLog.get_time(),
 				periodLog.get_forward_counter()
 			)
-			'''
-			print(
-				periodLog.get_time(),
-				periodLog.get_network_counter(),
-				periodLog.get_success_counter(),
-				periodLog.get_fail_counter()
-			)
-			'''
+
 			writer.increment_row_index()
 
 	writer.save()
 
-def main():
-	scenario = Scenario(FILE_NAME_SCENARIO_TEST)
-	simulate_scenario(scenario)
-	writer_output_file("output.xlsx")
+def get_a_new_output_name(fileName):
+	dateStr = str(datetime.datetime.now()) + "___"
+	dateStr = dateStr.replace(" ", "_")
+	dateStr = dateStr.replace("-", "_")
+	dateStr = dateStr.replace(":", "_")
+	dateStr = dateStr.replace(".", "_")
 
-	print(scenario._intervalForSendingRequests)
+	return OUTPUT_SRC + dateStr + fileName
+
+def main():
+	fileName = INPUT_FILE_NAME_SCENARIO_1
+
+	inputFileSrc = INPUT_SRC + fileName
+	scenario = Scenario(inputFileSrc)
+	simulate_scenario(scenario)
+
+	outputFileName = get_a_new_output_name(fileName)
+	writer_output_file(outputFileName)
 
 if __name__ == "__main__":
 	main()

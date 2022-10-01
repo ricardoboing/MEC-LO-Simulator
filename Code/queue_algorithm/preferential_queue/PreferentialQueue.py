@@ -10,29 +10,33 @@ class PreferentialQueue(RequestQueue):
 		self.firstBlock = initialBlock
 		self.lastBlock = initialBlock
 
-	def push_request(self, request, force=False):
+	def push_request(self, request, forcedPush=False):
 		self._update_first_freeblock()
-		block = self.lastBlock
+		lastUtilBlock = get_last_util_block(self.lastBlock, request)
 
-		while block != None:
-			if block.__class__ == FreeBlock:
-				leftBlock, requestBlock, rightBlock = block.alloc(request, False)
+		if lastUtilBlock == None:
+			if forcedPush:
+				lastUtilBlock = self.lastBlock
+			else:
+				return False
 
-				if (leftBlock != None) or (requestBlock != None) or (rightBlock != None):
-					self._update_first_block(block, leftBlock, requestBlock)
-					self._update_last_block(block, rightBlock, requestBlock)
-					return True
+		requestSize = get_request_size(request)
 
-			block = block.get_left_block()
+		if not forcedPush:
+			hasSpace = has_space(lastUtilBlock, requestSize, request)
+			
+			if not hasSpace:
+				return False
 
-		if force:
-			block = self.lastBlock
-			leftBlock, requestBlock, rightBlock = block.alloc(request, force)
-			self._update_first_block(block, leftBlock, requestBlock)
-			self._update_last_block(block, rightBlock, requestBlock)
+		rightBlock, areaShiftLeft = lastUtilBlock.alloc(request, forcedPush)
+		shift_left(lastUtilBlock.get_left_block(), areaShiftLeft)
 
-			return True
-		return False
+		if self.lastBlock == lastUtilBlock:
+			self.lastBlock = rightBlock
+
+		self.firstBlock = get_first_block(self.lastBlock)
+
+		return True
 
 	def get_first_request(self):
 		if self.is_empty():
