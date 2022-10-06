@@ -1,7 +1,18 @@
+from simulator.Simulation import *
+
+def _get_free_time(request):
+	service = request.get_service()
+	serviceMaxProcessTime = service.get_max_process_time()
+
+	realTime = Simulation.get_clock_pointer()
+
+	return realTime + serviceMaxProcessTime
+
 class MecNode:
 	def __init__(self, name, computingPower):
 		self.name = name
 		self.computingPower = computingPower
+		self.freeCpuTime = 0
 
 		self.reset()
 
@@ -9,8 +20,9 @@ class MecNode:
 		self.requestQueue = QueueClass()
 		print(QueueClass.__name__)
 
-	def receive_request(self, request, force=False):
-		return self.requestQueue.push_request(request, force)
+	def receive_request(self, request, force):
+		freeCpuTime = self._get_free_cpu_time()
+		return self.requestQueue.push_request(request, freeCpuTime, force)
 
 	def get_name(self):
 		return self.name
@@ -36,9 +48,17 @@ class MecNode:
 		if self.has_next_request():
 			self.currentRequestInProcess = self.requestQueue.get_first_request()
 			self.isBusy = True
+			self.freeCpuTime = _get_free_time(self.currentRequestInProcess)
 
 			return True
+		else:
+			self.freeCpuTime = -1
+
 		return False
+
+	def _get_free_cpu_time(self):
+		realTime = Simulation.get_clock_pointer()
+		return max(self.freeCpuTime, realTime)
 
 	def is_busy(self):
 		return self.isBusy

@@ -5,7 +5,7 @@ class Fifo(RequestQueue):
 	def __init__(self):
 		self.queue = []
 
-	def push_request(self, request, force):
+	def push_request(self, request, freeCpuTime, force):
 		if force:
 			self.queue.append(request)
 			return True
@@ -17,12 +17,11 @@ class Fifo(RequestQueue):
 		end += request.get_generated_time()
 		
 		start = end - processTime
-		realTime = Simulation.get_clock_pointer()
 
-		if realTime > start:
+		if freeCpuTime > start:
 			return False
 
-		load = realTime
+		load = freeCpuTime
 
 		for i in range (0, len(self.queue)):
 			_request = self.queue[i]

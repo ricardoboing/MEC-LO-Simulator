@@ -86,6 +86,7 @@ def main():
 	scenario = Scenario(inputFileSrc)
 	simulate_scenario(scenario)
 
+	print("Saving output file...")
 	outputFileName = get_a_new_output_name(fileName)
 	writer_output_file(outputFileName)
 

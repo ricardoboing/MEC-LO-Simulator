@@ -1,9 +1,14 @@
 class Block:
-	def __init__(self, start, end):
-		self.start = start
-		self.end = end
+	def __init__(self, width, end):
+		self.width = width
+		self.set_end(end)
+
 		self.leftBlock = None
 		self.rightBlock = None
+
+	def set_end(self, end):
+		self.end = end
+		self.start = end - self.width
 
 	def get_start(self):
 		return self.start
@@ -12,7 +17,7 @@ class Block:
 		return self.end
 
 	def get_size(self):
-		return self.end - self.start
+		return self.width
 
 	def set_right_block(self, rightBlock):
 		self.rightBlock = rightBlock
