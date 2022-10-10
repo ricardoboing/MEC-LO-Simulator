@@ -53,10 +53,10 @@ class PreferentialQueue(RequestQueue):
 			assert leftBlock.get_right_block() == None
 		rightBlock = None
 
-		freeNeeded = newBlock.get_size()
+		spaceNeeded = newBlock.get_size()
 		hasRightSpace = False
 
-		status = self._search_alloc_space(leftBlock, newBlock, rightBlock, freeNeeded, hasRightSpace, cpuFreeTime, forcedPush)
+		status = self._search_alloc_space(leftBlock, newBlock, rightBlock, spaceNeeded, hasRightSpace, cpuFreeTime, forcedPush)
 
 		if status:
 			return True
@@ -68,7 +68,7 @@ class PreferentialQueue(RequestQueue):
 		else:
 			start = leftBlock.end
 
-		end = start + freeNeeded
+		end = start + spaceNeeded
 		newBlock.set_end(end)
 
 		self._alloc_request(leftBlock, newBlock, rightBlock)
@@ -88,22 +88,22 @@ class PreferentialQueue(RequestQueue):
 		newBlock.set_left_block(leftBlock)
 		newBlock.set_right_block(rightBlock)
 
-	def _shift_or_alloc(self, leftBlock, newBlock, rightBlock, end, freeNeeded, hasRightSpace):
+	def _shift_or_alloc(self, leftBlock, newBlock, rightBlock, end, spaceNeeded, hasRightSpace):
 		if hasRightSpace:
-			_shift_left(rightBlock, freeNeeded)
+			_shift_left(rightBlock, spaceNeeded)
 		else:
 			if newBlock.get_right_block() == None and newBlock.get_left_block() == None:
 				newBlock.set_end(end)
 				self._alloc_request(leftBlock, newBlock, rightBlock)
 
-	def _search_alloc_space(self, leftBlock, newBlock, rightBlock, freeNeeded, hasRightSpace, cpuFreeTime, forcedPush):
+	def _search_alloc_space(self, leftBlock, newBlock, rightBlock, spaceNeeded, hasRightSpace, cpuFreeTime, forcedPush):
 		usefulArea = _get_useful_area(leftBlock, newBlock, rightBlock, cpuFreeTime)
 
 		end = usefulArea.get_end()
 		freeSpace = usefulArea.get_size()
 		
-		if freeSpace >= freeNeeded:
-			self._shift_or_alloc(leftBlock, newBlock, rightBlock, end, freeNeeded, hasRightSpace)
+		if freeSpace >= spaceNeeded:
+			self._shift_or_alloc(leftBlock, newBlock, rightBlock, end, spaceNeeded, hasRightSpace)
 			return True
 
 		if leftBlock == None:
@@ -117,7 +117,7 @@ class PreferentialQueue(RequestQueue):
 		else:
 			_hasRightSpace = hasRightSpace
 
-		_freeNeeded = freeNeeded - freeSpace
+		_freeNeeded = spaceNeeded - freeSpace
 		_leftBlock = leftBlock.get_left_block()
 		_rightBlock = leftBlock
 
@@ -129,7 +129,7 @@ class PreferentialQueue(RequestQueue):
 				_shift_left(rightBlock, shiftValue)
 			return False
 
-		self._shift_or_alloc(leftBlock, newBlock, rightBlock, end, freeNeeded, hasRightSpace)
+		self._shift_or_alloc(leftBlock, newBlock, rightBlock, end, spaceNeeded, hasRightSpace)
 		return True
 
 	def get_first_request(self):

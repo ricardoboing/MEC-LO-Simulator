@@ -49,22 +49,6 @@ def writer_output_file(outputFileName):
 				periodLog.get_network_counter(),
 				periodLog.get_forward_counter()
 			)
-			writer.set_row_in_success_sheet(
-				periodLog.get_time(),
-				periodLog.get_success_counter()
-			)
-			writer.set_row_in_fail_sheet(
-				periodLog.get_time(),
-				periodLog.get_fail_counter()
-			)
-			writer.set_row_in_network_sheet(
-				periodLog.get_time(),
-				periodLog.get_network_counter(),
-			)
-			writer.set_row_in_forward_sheet(
-				periodLog.get_time(),
-				periodLog.get_forward_counter()
-			)
 
 			writer.increment_row_index()
 

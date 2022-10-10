@@ -4,7 +4,7 @@ class RequestPackage:
 		self.request = request
 		self.destination = destination
 
-		self.previousDestinationList = []
+		self.previousDestinationList = [destination]
 
 	def increment_forward_counter(self):
 		self.forwardCounter += 1

@@ -13,6 +13,7 @@ class OutputScenarioWriter:
 		self.workbookTable = WorkbookTableWriter(fileName)
 		self.distributorCounter = 0
 
+		'''
 		successSheet = self.workbookTable.create_sheet(_SUCCESS_SHEET_NAME)
 		failSheet = self.workbookTable.create_sheet(_FAIL_SHEET_NAME)
 		networkSheet = self.workbookTable.create_sheet(_NETWORK_SHEET_NAME)
@@ -22,7 +23,7 @@ class OutputScenarioWriter:
 		self.failSheet = ComparationSheet(failSheet)
 		self.networkSheet = ComparationSheet(networkSheet)
 		self.forwardSheet = ComparationSheet(forwardSheet)
-
+		'''
 		self.distributorSheetList = []
 
 	def create_distributor_sheet(self, distributorName):
@@ -34,6 +35,7 @@ class OutputScenarioWriter:
 			DistributorSheet(distributorName, newDistributorSheet)
 		)
 
+		'''
 		self.successSheet.zero_row_index()
 		self.successSheet.create_column(distributorName)
 		
@@ -45,14 +47,17 @@ class OutputScenarioWriter:
 
 		self.forwardSheet.zero_row_index()
 		self.forwardSheet.create_column(distributorName)
+		'''
 
 	def increment_row_index(self):
 		currentDistributorSheet = self.distributorSheetList[-1]
 
+		'''
 		self.successSheet.increment_row_index()
 		self.failSheet.increment_row_index()
 		self.networkSheet.increment_row_index()
 		self.forwardSheet.increment_row_index()
+		'''
 		currentDistributorSheet.increment_row_index()
 
 	def set_row_in_distributor_sheet(self, time, success, fail, network, forwardCounter):

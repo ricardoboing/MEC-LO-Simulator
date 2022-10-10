@@ -3,7 +3,7 @@ from queue_algorithm.Fifo import *
 
 class OriginalSequentialForwarding:
 	QueueClass = Fifo
-	FORWARD_LIMIT = 3
+	FORWARD_LIMIT = 2
 
 	def receive_forward_request(packageRequest):
 		return OriginalSequentialForwarding.receive_user_request(packageRequest)

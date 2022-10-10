@@ -18,7 +18,6 @@ class MecNode:
 
 	def set_a_new_request_queue(self, QueueClass):
 		self.requestQueue = QueueClass()
-		print(QueueClass.__name__)
 
 	def receive_request(self, request, force):
 		freeCpuTime = self._get_free_cpu_time()
